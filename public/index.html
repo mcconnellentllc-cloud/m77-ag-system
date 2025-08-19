@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>M77 AG - Admin Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background: #1a1a1a;
+            color: #fff;
+            padding: 20px;
+        }
+        
+        .header {
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        h1 {
+            color: #a0845c;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #333;
+        }
+        
+        .stat-value {
+            font-size: 2em;
+            color: #a0845c;
+            font-weight: bold;
+        }
+        
+        .stat-label {
+            color: #888;
+            margin-top: 5px;
+        }
+        
+        .proposals-section {
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        
+        .filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .filters input, .filters select {
+            padding: 8px;
+            background: #333;
+            border: 1px solid #555;
+            color: #fff;
+            border-radius: 4px;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            background: #a0845c;
+            color: #000;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .btn:hover {
+            background: #b8956a;
+        }
+        
+        .btn-danger {
+            background: #dc3545;
+            color: #fff;
+        }
+        
+        .btn-success {
+            background: #28a745;
+            color: #fff;
+        }
+        
+        .btn-info {
+            background: #17a2b8;
+            color: #fff;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th {
+            background: #333;
+            color: #a0845c;
+            padding: 12px;
+            text-align: left;
+            position: sticky;
+            top: 0;
+        }
+        
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #333;
+        }
+        
+        tr:hover {
+            background: #333;
+        }
+        
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+        
+        .status-pending {
+            background: #ffc107;
+            color: #000;
+        }
+        
+        .status-approved {
+            background: #28a745;
+            color: #fff;
+        }
+        
+        .status-completed {
+            background: #17a2b8;
+            color: #fff;
+        }
+        
+        .status-rejected {
+            background: #dc3545;
+            color: #fff;
+        }
+        
+        .login-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .login-box {
+            background: #2a2a2a;
+            padding: 30px;
+            border-radius: 8px;
+            border: 2px solid #a0845c;
+            width: 400px;
+        }
+        
+        .login-box h2 {
+            color: #a0845c;
+            margin-bottom: 20px;
+        }
+        
+        .login-box input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            background: #333;
+            border: 1px solid #555;
+            color: #fff;
+            border-radius: 4px;
+        }
+        
+        .details-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .details-box {
+            background: #2a2a2a;
+            padding: 30px;
+            border-radius: 8px;
+            border: 2px solid #a0845c;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .service-list {
+            list-style: none;
+            padding: 10px;
+            background: #333;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        
+        .service-list li {
+            padding: 5px 0;
+            border-bottom: 1px solid #444;
+        }
+        
+        .service-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #333;
+        }
+        
+        .detail-label {
+            color: #a0845c;
+            font-weight: bold;
+        }
+        
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #888;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #a0845c;
+            text-decoration: none;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Modal -->
+    <div id="loginModal" class="login-modal">
+        <div class="login-box">
+            <h2>Admin Login</h2>
+            <p style="color: #888; margin-bottom: 20px;">Enter admin password to access dashboard</p>
+            <input type="password" id="adminPassword" placeholder="Enter admin password" onkeypress="if(event.key==='Enter') login()">
+            <button class="btn" onclick="login()" style="width: 100%;">LOGIN</button>
+            <p style="color: #666; margin-top: 20px; font-size: 12px;">Default: M77admin2024!</p>
+        </div>
+    </div>
+    
+    <!-- Main Dashboard (hidden until login) -->
+    <div id="dashboard" style="display: none;">
+        <a href="/" class="back-link">← Back to Calculator</a>
+        
+        <div class="header">
+            <h1>M77 AG Admin Dashboard</h1>
+            <div>
+                <button class="btn" onclick="exportCSV()">Export CSV</button>
+                <button class="btn" onclick="refreshData()">Refresh</button>
+                <button class="btn btn-danger" onclick="logout()">Logout</button>
+            </div>
+        </div>
+        
+        <!-- Statistics Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="totalProposals">0</div>
+                <div class="stat-label">Total Proposals</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="totalValue">$0</div>
+                <div class="stat-label">Total Value</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="avgAcres">0</div>
+                <div class="stat-label">Avg Acres</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="pendingCount">0</div>
+                <div class="stat-label">Pending</div>
+            </div>
+        </div>
+        
+        <!-- Proposals Table -->
+        <div class="proposals-section">
+            <h2 style="color: #a0845c; margin-bottom: 20px;">Recent Proposals</h2>
+            
+            <div class="filters">
+                <input type="text" id="searchInput" placeholder="Search by name or email..." onkeyup="filterTable()">
+                <select id="statusFilter" onchange="filterTable()">
+                    <option value="">All Status</option>
+                    <option value="pending">Pending</option>
+                    <option value="approved">Approved</option>
+                    <option value="completed">Completed</option>
+                    <option value="rejected">Rejected</option>
+                </select>
+                <input type="date" id="startDate" onchange="filterTable()">
+                <input type="date" id="endDate" onchange="filterTable()">
+                <button class="btn" onclick="clearFilters()">Clear Filters</button>
+            </div>
+            
+            <div id="tableContainer">
+                <table id="proposalsTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Date</th>
+                            <th>Operation</th>
+                            <th>Email</th>
+                            <th>Acres</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="proposalsBody">
+                        <!-- Data will be loaded here -->
+                    </tbody>
+                </table>
+                <div id="noData" class="no-data" style="display: none;">
+                    No proposals found. Waiting for submissions...
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Details Modal -->
+    <div id="detailsModal" class="details-modal">
+        <div class="details-box">
+            <h2 style="color: #a0845c; margin-bottom: 20px;">Proposal Details</h2>
+            <div id="detailsContent">
+                <!-- Details will be loaded here -->
+            </div>
+            <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+                <button class="btn btn-success" onclick="updateStatus('approved')">Approve</button>
+                <button class="btn btn-danger" onclick="updateStatus('rejected')">Reject</button>
+                <button class="btn btn-info" onclick="updateStatus('completed')">Mark Complete</button>
+                <button class="btn" onclick="closeDetails()">Close</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const API_URL = 'http://localhost:3000/api';
+        let adminPassword = '';
+        let allProposals = [];
+        let currentProposalId = null;
+        
+        // Check for saved password
+        window.onload = function() {
+            const savedPassword = localStorage.getItem('adminPassword');
+            if (savedPassword) {
+                adminPassword = savedPassword;
+                document.getElementById('loginModal').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+                loadDashboard();
+            }
+        };
+        
+        function login() {
+            adminPassword = document.getElementById('adminPassword').value;
+            if (!adminPassword) {
+                alert('Please enter password');
+                return;
+            }
+            
+            // Test the password by making a request
+            fetch(`${API_URL}/proposals`, {
+                headers: {
+                    'x-admin-password': adminPassword
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    localStorage.setItem('adminPassword', adminPassword);
+                    document.getElementById('loginModal').style.display = 'none';
+                    document.getElementById('dashboard').style.display = 'block';
+                    loadDashboard();
+                } else {
+                    alert('Invalid password. Try: M77admin2024!');
+                }
+            })
+            .catch(error => {
+                alert('Connection error. Make sure the server is running (node server.js)');
+                console.error('Error:', error);
+            });
+        }
+        
+        function logout() {
+            localStorage.removeItem('adminPassword');
+            location.reload();
+        }
+        
+        function loadDashboard() {
+            // Load proposals
+            fetch(`${API_URL}/proposals`, {
+                headers: {
+                    'x-admin-password': adminPassword
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                allProposals = data;
+                displayProposals(data);
+                updateStats();
+                
+                // Show/hide no data message
+                if (data.length === 0) {
+                    document.getElementById('noData').style.display = 'block';
+                    document.getElementById('proposalsTable').style.display = 'none';
+                } else {
+                    document.getElementById('noData').style.display = 'none';
+                    document.getElementById('proposalsTable').style.display = 'table';
+                }
+            })
+            .catch(error => {
+                console.error('Error loading proposals:', error);
+            });
+            
+            // Load analytics
+            fetch(`${API_URL}/analytics`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.totalProposals) {
+                    document.getElementById('totalProposals').textContent = data.totalProposals.count || 0;
+                }
+                if (data.totalValue) {
+                    const value = data.totalValue.total || 0;
+                    document.getElementById('totalValue').textContent = '$' + value.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                }
+                if (data.avgAcres) {
+                    document.getElementById('avgAcres').textContent = Math.round(data.avgAcres.avg || 0);
+                }
+            })
+            .catch(error => {
+                console.error('Error loading analytics:', error);
+            });
+        }
+        
+        function displayProposals(proposals) {
+            const tbody = document.getElementById('proposalsBody');
+            tbody.innerHTML = '';
+            
+            if (proposals.length === 0) {
+                return;
+            }
+            
+            proposals.forEach(proposal => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td>${proposal.id}</td>
+                    <td>${new Date(proposal.timestamp).toLocaleDateString()}</td>
+                    <td>${proposal.operation_name}</td>
+                    <td>${proposal.email}</td>
+                    <td>${proposal.acres}</td>
+                    <td>${proposal.total}</td>
+                    <td><span class="status-badge status-${proposal.status}">${proposal.status}</span></td>
+                    <td>
+                        <button class="btn" onclick="viewDetails(${proposal.id})" style="padding: 4px 8px; font-size: 12px;">View</button>
+                        <button class="btn btn-danger" onclick="deleteProposal(${proposal.id})" style="padding: 4px 8px; font-size: 12px;">Delete</button>
+                    </td>
+                `;
+            });
+        }
+        
+        function updateStats() {
+            const pending = allProposals.filter(p => p.status === 'pending').length;
+            document.getElementById('pendingCount').textContent = pending;
+        }
+        
+        function clearFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('statusFilter').value = '';
+            document.getElementById('startDate').value = '';
+            document.getElementById('endDate').value = '';
+            filterTable();
+        }
+        
+        function filterTable() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const status = document.getElementById('statusFilter').value;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            
+            let filtered = allProposals;
+            
+            if (search) {
+                filtered = filtered.filter(p => 
+                    p.operation_name.toLowerCase().includes(search) ||
+                    p.email.toLowerCase().includes(search)
+                );
+            }
+            
+            if (status) {
+                filtered = filtered.filter(p => p.status === status);
+            }
+            
+            if (startDate) {
+                filtered = filtered.filter(p => new Date(p.timestamp) >= new Date(startDate));
+            }
+            
+            if (endDate) {
+                filtered = filtered.filter(p => new Date(p.timestamp) <= new Date(endDate + 'T23:59:59'));
+            }
+            
+            displayProposals(filtered);
+        }
+        
+        function viewDetails(id) {
+            currentProposalId = id;
+            fetch(`${API_URL}/proposals/${id}`)
+            .then(response => response.json())
+            .then(proposal => {
+                const content = document.getElementById('detailsContent');
+                content.innerHTML = `
+                    <div class="detail-row">
+                        <span class="detail-label">ID:</span>
+                        <span>${proposal.id}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Date:</span>
+                        <span>${new Date(proposal.timestamp).toLocaleString()}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Operation:</span>
+                        <span>${proposal.operation_name}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Email:</span>
+                        <span>${proposal.email}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Phone:</span>
+                        <span>${proposal.phone || 'N/A'}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Fields:</span>
+                        <span>${proposal.fields}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Acres:</span>
+                        <span>${proposal.acres}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Crop:</span>
+                        <span>${proposal.crop_type || 'N/A'}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Start Date:</span>
+                        <span>${proposal.start_date}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">End Date:</span>
+                        <span>${proposal.finish_date}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Status:</span>
+                        <span><span class="status-badge status-${proposal.status}">${proposal.status}</span></span>
+                    </div>
+                    <h3 style="color: #a0845c; margin-top: 20px; margin-bottom: 10px;">Services:</h3>
+                    <ul class="service-list">
+                        ${proposal.services.map(s => `<li>${s.name}: ${s.cost}</li>`).join('')}
+                    </ul>
+                    <div class="detail-row">
+                        <span class="detail-label">Subtotal:</span>
+                        <span>${proposal.subtotal}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Discount:</span>
+                        <span>${proposal.discount}</span>
+                    </div>
+                    <div class="detail-row" style="font-size: 1.2em;">
+                        <span class="detail-label">Total:</span>
+                        <span style="color: #a0845c; font-weight: bold;">${proposal.total}</span>
+                    </div>
+                    ${proposal.notes ? `<div class="detail-row"><span class="detail-label">Notes:</span><span>${proposal.notes}</span></div>` : ''}
+                `;
+                document.getElementById('detailsModal').style.display = 'flex';
+            })
+            .catch(error => {
+                console.error('Error loading details:', error);
+                alert('Error loading proposal details');
+            });
+        }
+        
+        function closeDetails() {
+            document.getElementById('detailsModal').style.display = 'none';
+        }
+        
+        function updateStatus(status) {
+            const notes = prompt('Add notes (optional):');
+            
+            fetch(`${API_URL}/proposals/${currentProposalId}/status`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ status, notes })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Status updated successfully');
+                    closeDetails();
+                    refreshData();
+                }
+            })
+            .catch(error => {
+                console.error('Error updating status:', error);
+                alert('Error updating status');
+            });
+        }
+        
+        function deleteProposal(id) {
+            if (!confirm('Are you sure you want to delete this proposal?')) {
+                return;
+            }
+            
+            fetch(`${API_URL}/proposals/${id}`, {
+                method: 'DELETE'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Proposal deleted');
+                    refreshData();
+                }
+            })
+            .catch(error => {
+                console.error('Error deleting proposal:', error);
+                alert('Error deleting proposal');
+            });
+        }
+        
+        function exportCSV() {
+            window.open(`${API_URL}/export/csv`, '_blank');
+        }
+        
+        function refreshData() {
+            loadDashboard();
+        }
+    </script>
+</body>
+</html>
